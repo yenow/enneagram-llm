@@ -57,7 +57,7 @@ async def stream_llm_generator(request: LlmRequest):
         model=LLM_MODEL_NAME,
     )
 
-    prompt = load_prompt("./prompt.yaml", encoding="utf-8")
+    prompt = load_prompt("app/services/prompt.yaml", encoding="utf-8")
 
     chain = (
             {"question": RunnablePassthrough()}

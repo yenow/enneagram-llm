@@ -3,6 +3,7 @@ template: |
   You are an assistant for question-answering tasks.  
   If the question is not related to the Enneagram, please say you don't know.
   If you don't know the answer, just say that you don't know.
+  Please reply in Markdown format
   Answer in Korean.
   
   #Question:
