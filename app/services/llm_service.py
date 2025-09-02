@@ -1,6 +1,9 @@
 from app.models.llm_models import LlmRequest, LlmResponse
 from app.core.config import LLM_MODEL_NAME
 from langchain_openai import ChatOpenAI
+from langchain_core.prompts import load_prompt
+from langchain_core.runnables import RunnablePassthrough
+from langchain_core.output_parsers import StrOutputParser
 import asyncio
 import uuid
 import json
@@ -12,10 +15,19 @@ def get_llm_response(request: LlmRequest) -> LlmResponse:
         model=LLM_MODEL_NAME,  # 모델명
     )
 
-    response = llm.invoke(request.query)
+    prompt = load_prompt("./prompt.yaml", encoding="utf-8")
+
+    chain = (
+            {"question": RunnablePassthrough()}
+            | prompt
+            | llm
+            | StrOutputParser()
+    )
+
+    response = chain.invoke(request.query)
     print(response)
 
-    return LlmResponse(response=response.content, model_used=LLM_MODEL_NAME)
+    return LlmResponse(response=response, model_used=LLM_MODEL_NAME)
 
 def get_test_llm_response(request: LlmRequest) -> LlmResponse:
 
@@ -24,10 +36,19 @@ def get_test_llm_response(request: LlmRequest) -> LlmResponse:
         model=LLM_MODEL_NAME,  # 모델명
     )
 
-    response = llm.invoke(request.query)
+    prompt = load_prompt("./prompt.yaml", encoding="utf-8")
+
+    chain = (
+            {"question": RunnablePassthrough()}
+            | prompt
+            | llm
+            | StrOutputParser()
+    )
+
+    response = chain.invoke(request.query)
     print(response)
 
-    return LlmResponse(response=response.content, model_used=LLM_MODEL_NAME)
+    return LlmResponse(response=response, model_used=LLM_MODEL_NAME)
 
 async def stream_llm_generator(request: LlmRequest):
     query_id = str(uuid.uuid4())
@@ -36,12 +57,21 @@ async def stream_llm_generator(request: LlmRequest):
         model=LLM_MODEL_NAME,
     )
 
+    prompt = load_prompt("./prompt.yaml", encoding="utf-8")
+
+    chain = (
+            {"question": RunnablePassthrough()}
+            | prompt
+            | llm
+            | StrOutputParser()
+    )
+
     try:
-        async for chunk in llm.astream(request.query):
-            if chunk.content:
+        async for chunk in chain.astream(request.query):
+            if chunk:
                 data_to_send = {
                     "queryId": query_id,
-                    "content": chunk.content,
+                    "content": chunk,
                 }
                 yield f"data: {json.dumps(data_to_send, ensure_ascii=False)}\n\n"
                 await asyncio.sleep(0.01)

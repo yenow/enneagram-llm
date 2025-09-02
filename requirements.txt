@@ -8,6 +8,16 @@ jinja2
 langchain-openai==0.3.9
 langchain==0.3.21
 langsmith==0.3.18
+langchain-core==0.3.46
+langchain-text-splitters==0.3.7
+langchain-experimental==0.3.4
+langchain-community==0.3.20
+langchain-chroma==0.2.2
+
+pymupdf==1.25.4
+pypdf==4.3.1
+
+chromadb==0.6.3
 
 # Setting
 python-dotenv==1.0.1
