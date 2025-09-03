@@ -39,3 +39,9 @@
 
 ## Swagger UI
 http://localhost:8000/docs
+
+## 도커 허브
+```bash
+  docker build -t phantomysy/enneagram-llm:0.0.1 .
+  docker push phantomysy/enneagram-llm:0.0.1
+ ```
